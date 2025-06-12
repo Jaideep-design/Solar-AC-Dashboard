@@ -10,6 +10,8 @@ Created on Thu Jun 12 17:23:07 2025
 import streamlit as st
 import pandas as pd
 import io
+import json
+import base64
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
@@ -28,8 +30,12 @@ SCOPES = [
     'https://www.googleapis.com/auth/spreadsheets'
 ]
 
-creds = service_account.Credentials.from_service_account_file(
-    SERVICE_ACCOUNT_FILE, scopes=SCOPES
+# Decode and load credentials from Streamlit Secrets
+key_json = base64.b64decode(st.secrets["gcp_service_account"]["key_b64"]).decode("utf-8")
+service_account_info = json.loads(key_json)
+
+creds = service_account.Credentials.from_service_account_info(
+    service_account_info, scopes=SCOPES
 )
 
 drive_service = build('drive', 'v3', credentials=creds)
