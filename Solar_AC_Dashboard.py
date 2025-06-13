@@ -22,7 +22,7 @@ CSV_FILE_ID = '17o6xqWHYCTDCUAcRO-dLKGzmNPTuz___'    # raw data
 CSV_FILE_ID_2 = '17HdsQxLB6GlDuxd5yYLKPOlw9JrbWl40'   # latest data
 COLUMNS_RAW = ['Topic', 'timestamp', 'PV_kWh', 'OP_kWh', 'BATT_V_min',
                'ac_on_duration_h', 'AC_ROOM_TEMP_avg', 'avg_?T', 'unfiltered_transitions_to_level_0']
-COLUMNS_LATEST = ['Topic', 'BATT_V_min']
+COLUMNS_LATEST = ['Topic', 'BATT_V_min', 'BATT_V', 'BATT_TYPE', 'MAX_CHG_I']
 
 # === AUTHENTICATION ===
 SCOPES = [
@@ -73,14 +73,14 @@ def process_data(df1_raw, df2_latest):
         'PV_kWh', 'OP_kWh', 'ac_on_duration_h',
         'AC_ROOM_TEMP_avg', 'avg_?T', 'unfiltered_transitions_to_level_0'
     ]].mean().reset_index()
-    avg_last7.columns = ['Topic'] + [col + '_last7_avg' for col in avg_last7.columns if col != 'Topic']
+    avg_last7.columns = ['Topic'] + [col + '_last7day_avg' for col in avg_last7.columns if col != 'Topic']
     
     avg_last7.iloc[:, 1:] = avg_last7.iloc[:, 1:].round(0)
     avg_last7 = avg_last7.merge(latest_dates, on='Topic', how='inner')
     avg_last7 = avg_last7.rename(columns={
         'latest_date': 'timestamp',
-        'avg_?T_last7_avg': 'avg_delta_temp',
-        'unfiltered_transitions_to_level_0_last7_avg': 'Trips'
+        'avg_?T_last7day_avg': 'avg_delta_temp',
+        'unfiltered_transitions_to_level_0_last7day_avg': 'Trips'
     })
     avg_last7['timestamp'] = avg_last7['timestamp'].dt.strftime('%Y-%m-%d')
 
@@ -88,25 +88,6 @@ def process_data(df1_raw, df2_latest):
     # Merge with df2
     result_df = df2.merge(avg_last7, on='Topic', how='left')
     return result_df
-
-# === STREAMLIT APP ===
-# st.set_page_config(page_title="Ecozen Solar AC", layout="wide")
-# st.title("📊 Dashboard")
-
-# if st.button("🔄 Refresh & Process Data"):
-#     with st.spinner("Fetching CSVs from Google Drive..."):
-#         df_raw = download_csv(CSV_FILE_ID)
-#         df_latest = download_csv(CSV_FILE_ID_2)
-#         final_df = process_data(df_raw, df_latest)
-#         st.session_state.final_df = final_df
-#     st.success("✅ Data refreshed and processed!")
-
-# # Show data
-# if "final_df" in st.session_state:
-#     st.subheader("📋 Final Merged Data")
-#     st.dataframe(st.session_state.final_df, use_container_width=True)
-# else:
-#     st.info("Click '🔄 Refresh & Process Data' to begin.")
 
 # === STREAMLIT APP ===
 st.set_page_config(page_title="Ecozen Solar AC", layout="wide")
