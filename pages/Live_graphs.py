@@ -62,12 +62,12 @@ if submit:
                 df_plot = df_plot.sort_values(x_colname).reset_index(drop=True)
                 
                 fig = make_subplots(
-                    rows=7, cols=1, shared_xaxes=True, vertical_spacing=0.04,
+                    rows=8, cols=1, shared_xaxes=True, vertical_spacing=0.04,
                     subplot_titles=(
                         "Power", "Battery Voltage", "Battery Current",
                         "AC Levels", "AC Temp", "AC Modes", "Grid and PV Voltages"
                     ),
-                    row_heights=[0.15]*7
+                    row_heights=[0.15]*8
                 )
                 
                 # Row 1: PV_W and OP_W
@@ -108,6 +108,12 @@ if submit:
                 fig.add_trace(go.Scatter(x=df_plot[x_colname], y=df_plot.OP_V, mode='lines',line=dict(color='blue'), name='OP_V'), row=7, col=1)
                 fig.add_trace(go.Scatter(x=df_plot[x_colname], y=df_plot.GRID_V, mode='lines',line=dict(color='red'), name='GRID_V'), row=7, col=1)
                 fig.add_trace(go.Scatter(x=df_plot[x_colname], y=df_plot.PV_V, mode='lines',line=dict(color='green'), name='PV_V'), row=7, col=1)
+
+                # --- Fault/Alarm/BIN Subplots (8–10) ---                
+                for col in df_plot.columns:
+                    if col.startswith("BIN_STAT_"):
+                        fig.add_trace(go.Scatter(x=df_plot[x_colname], y=df_plot[col], mode='lines', line=dict(shape='hv'), visible='legendonly', name=col), row=8, col=1)
+
                   # Highlight high battery mode regions
                 highmode_mask = df_plot.RES2_batt_mode_high == 1
                 highmode_regions = []
@@ -136,7 +142,7 @@ if submit:
                         )
                 
                 # Enable X-axis on all subplots
-                for i in range(1, 8):
+                for i in range(1, 9):
                     fig.update_xaxes(showticklabels=True, row=i, col=1)
                 
                 # Layout
@@ -144,7 +150,7 @@ if submit:
                     height=1500,
                     # width=1100,
                     title=f"{topic} - Multi-axis Visualization",
-                    legend=dict(orientation="h", yanchor="bottom", y=-0.1, xanchor="center", x=0.5),
+                    legend=dict(orientation="h", yanchor="bottom", y=-0.15, xanchor="center", x=0.5),
                     hovermode="x unified"
                 )
 
