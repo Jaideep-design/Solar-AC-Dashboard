@@ -79,9 +79,12 @@ if submit:
                 # Row 2: Battery Voltage and Shutoff
                 fig.add_trace(go.Scatter(x=df_plot[x_colname], y=df_plot.BATT_V, mode='lines+markers', name='BATT_V'), row=2, col=1)
                 fig.add_trace(go.Scatter(x=df_plot[x_colname], y=df_plot.BATT_V_SHUTOFF, mode='lines', name='BATT_V_SHUTOFF'), row=2, col=1)
+                fig.add_trace(go.Scatter(x=df_plot[x_colname], y=df_plot.BATT_FLOAT_V, mode='lines', name='BATT_FLOAT_V'), row=2, col=1)
+                fig.add_trace(go.Scatter(x=df_plot[x_colname], y=df_plot.BATT_TYPE, mode='lines', name='BATT_TYPE'), row=2, col=1)
                 
                 # Row 3: Battery Current with zones
                 fig.add_trace(go.Scatter(x=df_plot[x_colname], y=df_plot.BATT_I, mode='lines+markers', name='BATT_I'), row=3, col=1)
+                fig.add_trace(go.Scatter(x=df_plot[x_colname], y=df_plot.MAX_CHG_I, mode='lines+markers', name='MAX_CHG_I'), row=3, col=1)
                 fig.add_hline(y=0, line_dash="dash", row=3, col=1)
                 fig.add_hline(y=33, line_dash="dash", row=3, col=1)
                 fig.add_shape(type="rect", xref="x", yref="y3", x0=df_plot[x_colname].iloc[0], x1=df_plot[x_colname].iloc[-1],
