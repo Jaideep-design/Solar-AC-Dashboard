@@ -87,6 +87,7 @@ def process_data(df1_raw, df2_latest):
 
     # Merge with df2
     result_df = df2.merge(avg_last7, on='Topic', how='left')
+    result_df = result_df[~result_df.loc[:, result_df.columns.difference(['Topic'])].isna().all(axis=1)]
     return result_df
 
 # === STREAMLIT APP ===
