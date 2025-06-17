@@ -21,7 +21,7 @@ SERVICE_ACCOUNT_FILE = r"C:\Users\Admin\Desktop\solar-ac-customer-mapping-905e29
 CSV_FILE_ID = '17o6xqWHYCTDCUAcRO-dLKGzmNPTuz___'    # raw data
 CSV_FILE_ID_2 = '17HdsQxLB6GlDuxd5yYLKPOlw9JrbWl40'   # latest data
 COLUMNS_RAW = ['Topic', 'timestamp', 'PV_kWh', 'OP_kWh', 'BATT_V_min',
-               'ac_on_duration_h', 'AC_ROOM_TEMP_avg', 'avg_?T', 'unfiltered_transitions_to_level_0']
+               'ac_on_duration_h', 'AC_ROOM_TEMP_avg', 'avg_?T', 'unfiltered_transitions_to_level_0', 'non_acload_min_W']
 COLUMNS_LATEST = ['Topic', 'BATT_V_min', 'BATT_V', 'BATT_TYPE', 'MAX_CHG_I']
 
 # === AUTHENTICATION ===
@@ -71,7 +71,7 @@ def process_data(df1_raw, df2_latest):
     # Calculate average
     avg_last7 = df_last7.groupby('Topic')[[
         'PV_kWh', 'OP_kWh', 'ac_on_duration_h',
-        'AC_ROOM_TEMP_avg', 'avg_?T', 'unfiltered_transitions_to_level_0'
+        'AC_ROOM_TEMP_avg', 'avg_?T', 'unfiltered_transitions_to_level_0', 'non_acload_min_W'
     ]].mean().reset_index()
     avg_last7.columns = ['Topic'] + [col + '_last7day_avg' for col in avg_last7.columns if col != 'Topic']
     
