@@ -73,14 +73,15 @@ def process_data(df1_raw, df2_latest):
         'PV_kWh', 'OP_kWh', 'ac_on_duration_h',
         'AC_ROOM_TEMP_avg', 'avg_?T', 'unfiltered_transitions_to_level_0', 'non_acload_avg_W'
     ]].mean().reset_index()
-    avg_last7.columns = ['Topic'] + [col + '_last7day_avg' for col in avg_last7.columns if col != 'Topic']
+    # avg_last7.columns = ['Topic'] + [col + '_last7day_avg' for col in avg_last7.columns if col != 'Topic']
     
     avg_last7.iloc[:, 1:] = avg_last7.iloc[:, 1:].round(0)
     avg_last7 = avg_last7.merge(latest_dates, on='Topic', how='inner')
     avg_last7 = avg_last7.rename(columns={
+        'AC_ROOM_TEMP_avg': 'AC_RTEMP_avg',
         'latest_date': 'timestamp',
-        'avg_?T_last7day_avg': 'avg_delta_temp',
-        'unfiltered_transitions_to_level_0_last7day_avg': 'Trips'
+        'avg_?T': 'avg_delta_temp',
+        'unfiltered_transitions_to_level_0': 'Trips'
     })
     avg_last7['timestamp'] = avg_last7['timestamp'].dt.strftime('%Y-%m-%d')
 
@@ -88,6 +89,9 @@ def process_data(df1_raw, df2_latest):
     # Merge with df2
     result_df = df2.merge(avg_last7, on='Topic', how='left')
     result_df = result_df[~result_df.loc[:, result_df.columns.difference(['Topic'])].isna().all(axis=1)]
+    result_df = result_df.rename(columns={'BATT_V_min': 'B_V_min',
+    'BATT_V': 'B_V',
+    'BATT_TYPE': 'B_TYPE'})
     return result_df
 
 # === STREAMLIT APP ===
