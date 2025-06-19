@@ -22,7 +22,7 @@ CSV_FILE_ID = '17o6xqWHYCTDCUAcRO-dLKGzmNPTuz___'  # Google Drive file ID of the
 CSV_FILE_ID_2 = '17HdsQxLB6GlDuxd5yYLKPOlw9JrbWl40' # Google Drive file ID of the latest CSV
 COLUMNS_TO_DISPLAY = [
     'Topic', 'timestamp', 'PV_kWh', 'OP_kWh', 'BATT_V_min',
-    'ac_on_duration_h', 'AC_ROOM_TEMP_avg', 'avg_?T', 'unfiltered_transitions_to_level_0'
+    'ac_on_duration_h', 'AC_ROOM_TEMP_avg', 'avg_?T', 'unfiltered_transitions_to_level_0', 'non_acload_avg_W'
 ]
 
 # === AUTHENTICATION ===
@@ -53,33 +53,6 @@ def download_csv(file_id):
     df = pd.read_csv(fh)
     return df
 
-# # === STREAMLIT APP ===
-# st.set_page_config(page_title="Ecozen Solar AC", layout="wide")
-# st.title("📉 Solar AC reports")
-
-# # Session state for data caching
-# if "df" not in st.session_state:
-#     st.session_state.df = pd.DataFrame()
-
-# # Manual Refresh
-# if st.button("🔄 Refresh Data"):
-#     with st.spinner("Downloading latest CSV from Google Drive..."):
-#         df = download_csv(CSV_FILE_ID)
-#         df = df[COLUMNS_TO_DISPLAY]
-#         df = df.rename(columns={
-#             'avg_?T': 'avg_delta_temp',
-#             'unfiltered_transitions_to_level_0': 'Trips'
-#         })
-#         st.session_state.df = df
-#     st.success("✅ Data refreshed!")
-
-# # Show dataframe
-# if not st.session_state.df.empty:
-#     st.subheader("📋 Metrics Data (From Google Drive CSV)")
-#     st.dataframe(st.session_state.df, use_container_width=True)
-# else:
-#     st.info("Click '🔄 Refresh Data from Google Drive' to load data.")
-
 # === STREAMLIT APP ===
 st.set_page_config(page_title="Ecozen Solar AC", layout="wide")
 st.title("📉 Solar AC reports")
@@ -94,6 +67,8 @@ if st.button("🔄 Refresh Data"):
         df = download_csv(CSV_FILE_ID)
         df = df[COLUMNS_TO_DISPLAY]
         df = df.rename(columns={
+            'AC_ROOM_TEMP_avg': 'AC_RTEMP_avg',
+            'BATT_V_min': 'B_V_min',
             'avg_?T': 'avg_delta_temp',
             'unfiltered_transitions_to_level_0': 'Trips'
         })
