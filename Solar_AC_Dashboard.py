@@ -11,6 +11,7 @@ import os
 import streamlit as st
 import pandas as pd
 import io
+import pytz
 import json
 import base64
 import gspread
@@ -167,7 +168,12 @@ if "final_df" in st.session_state:
         st.subheader("📝 Comments")
         st.markdown(f"**Previous Comments for Topic: `{selected_topic}`**")
         if not topic_comments.empty:
-            topic_comments['Timestamp'] = pd.to_datetime(topic_comments['Timestamp'])
+            # Ensure Timestamp is timezone-aware (assuming it's UTC initially)
+            topic_comments['Timestamp'] = pd.to_datetime(topic_comments['Timestamp'], utc=True)
+            
+            # Convert to IST
+            ist = pytz.timezone('Asia/Kolkata')
+            topic_comments['Timestamp'] = topic_comments['Timestamp'].dt.tz_convert(ist)
             st.dataframe(topic_comments.sort_values("Timestamp", ascending=False), use_container_width=True)
         else:
             st.info("No comments yet for this Topic.")
