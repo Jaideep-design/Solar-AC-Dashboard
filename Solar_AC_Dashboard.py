@@ -113,7 +113,7 @@ def process_data(df1_raw, df2_latest):
 
     avg_last7 = df_last7.groupby('Topic')[[
         'PV_kWh', 'OP_kWh', 'ac_on_duration_h',
-        'AC_ROOM_TEMP_avg', 'avg_?T', 'unfiltered_transitions_to_level_0', 'non_acload_avg_W']].mean().reset_index()
+        'AC_ROOM_TEMP_avg', 'avg_?T', 'unfiltered_transitions_to_level_0', 'non_acload_avg_W', 'percent_fully_used']].mean().reset_index()
 
     avg_last7.iloc[:, 1:] = avg_last7.iloc[:, 1:].round(0)
     avg_last7 = avg_last7.merge(latest_dates, on='Topic', how='inner')
