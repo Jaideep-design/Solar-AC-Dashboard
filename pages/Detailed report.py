@@ -22,7 +22,7 @@ CSV_FILE_ID = '17o6xqWHYCTDCUAcRO-dLKGzmNPTuz___'  # Google Drive file ID of the
 CSV_FILE_ID_2 = '17HdsQxLB6GlDuxd5yYLKPOlw9JrbWl40' # Google Drive file ID of the latest CSV
 COLUMNS_TO_DISPLAY = [
     'Topic', 'timestamp', 'PV_kWh', 'OP_kWh', 'BATT_V_min',
-    'ac_on_duration_h', 'AC_ROOM_TEMP_avg', 'avg_?T', 'unfiltered_transitions_to_level_0', 'non_acload_avg_W'
+    'ac_on_duration_h', 'AC_ROOM_TEMP_avg', 'avg_?T', 'unfiltered_transitions_to_level_0', 'non_acload_avg_W', 'percent_fully_used', 'start_time', 'end_time', 'BATT_V_start', 'BATT_V_end'
 ]
 
 # === AUTHENTICATION ===
@@ -70,7 +70,8 @@ if st.button("🔄 Refresh Data"):
             'AC_ROOM_TEMP_avg': 'AC_RTEMP_avg',
             'BATT_V_min': 'B_V_min',
             'avg_?T': 'avg_delta_temp',
-            'unfiltered_transitions_to_level_0': 'Trips'
+            'unfiltered_transitions_to_level_0': 'Trips',
+            'percent_fully_used': 'SFU_%'
         })
         st.session_state.df = df
     st.success("✅ Data refreshed!")
