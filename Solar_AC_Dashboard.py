@@ -28,7 +28,7 @@ COMMENTS_SHEET_NAME = 'solarac_Comments_log'
 FOLDER_ID = '1QxSN4cOPxXwjIqvenJpCTiZNPPGEl6GV'
 
 COLUMNS_RAW = ['Topic', 'timestamp', 'PV_kWh', 'OP_kWh', 'BATT_V_min',
-               'ac_on_duration_h', 'AC_ROOM_TEMP_avg', 'avg_?T', 'unfiltered_transitions_to_level_0', 'non_acload_avg_W']
+               'ac_on_duration_h', 'AC_ROOM_TEMP_avg', 'avg_?T', 'unfiltered_transitions_to_level_0', 'non_acload_avg_W', 'percent_fully_used']
 COLUMNS_LATEST = ['Topic', 'BATT_V_min', 'BATT_V', 'BATT_TYPE', 'MAX_CHG_I']
 
 SCOPES = ['https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/spreadsheets']
@@ -121,7 +121,8 @@ def process_data(df1_raw, df2_latest):
         'AC_ROOM_TEMP_avg': 'AC_RTEMP_avg',
         'latest_date': 'timestamp',
         'avg_?T': 'avg_delta_temp',
-        'unfiltered_transitions_to_level_0': 'Trips'
+        'unfiltered_transitions_to_level_0': 'Trips',
+        'percent_fully_used': 'SFU_%'
     })
     avg_last7['timestamp'] = avg_last7['timestamp'].dt.strftime('%Y-%m-%d')
 
